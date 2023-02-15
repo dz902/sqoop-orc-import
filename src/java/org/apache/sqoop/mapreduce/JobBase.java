@@ -185,13 +185,16 @@ public class JobBase {
         addDirToCache(sqoopLibFile, fs, localUrls);
       }
     } else {
-      LOG.warn("SQOOP_HOME is unset. May not be able to find "
+      LOG.info("SQOOP_HOME is unset. May not be able to find "
           + "all job dependencies.");
     }
 
     // If the user run import into hive as Parquet file,
     // Add anything in $HIVE_HOME/lib.
-    if (options.doHiveImport() && (options.getFileLayout() == SqoopOptions.FileLayout.ParquetFile)) {
+    if (options.doHiveImport() && (
+      options.getFileLayout() == SqoopOptions.FileLayout.ParquetFile ||
+      options.getFileLayout() == SqoopOptions.FileLayout.ORCDataFile
+    )) {
       String hiveHome = options.getHiveHome();
       if (null != hiveHome) {
         File hiveHomeFile = new File(hiveHome);
@@ -199,8 +202,12 @@ public class JobBase {
         if (hiveLibFile.exists()) {
           addDirToCache(hiveLibFile, fs, localUrls);
         }
+        File hiveAuxLibFile = new File(hiveHomeFile, "auxlib");
+        if (hiveAuxLibFile.exists()) {
+          addDirToCache(hiveAuxLibFile, fs, localUrls);
+        }
       } else {
-        LOG.warn("HIVE_HOME is unset. Cannot add hive libs as dependencies.");
+        LOG.info("HIVE_HOME is unset. Cannot add hive libs as dependencies.");
       }
     }
 

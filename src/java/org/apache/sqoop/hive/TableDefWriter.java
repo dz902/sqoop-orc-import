@@ -214,6 +214,8 @@ public class TableDefWriter {
 
     if (SqoopOptions.FileLayout.ParquetFile.equals(options.getFileLayout())) {
       sb.append("STORED AS PARQUET");
+    } else if (SqoopOptions.FileLayout.ORCDataFile.equals(options.getFileLayout())) {
+        sb.append("STORED AS ORC");
     } else {
       sb.append("ROW FORMAT DELIMITED FIELDS TERMINATED BY '");
       sb.append(getHiveOctalCharCode((int) options.getOutputFieldDelim()));

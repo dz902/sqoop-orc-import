@@ -151,8 +151,8 @@ public class HiveImport implements HiveClient {
     if (null == outputTableName) {
       outputTableName = inputTableName;
     }
-    LOG.debug("Hive.inputTable: " + inputTableName);
-    LOG.debug("Hive.outputTable: " + outputTableName);
+    LOG.info("Hive.inputTable: " + inputTableName);
+    LOG.info("Hive.outputTable: " + outputTableName);
 
     // For testing purposes against our mock hive implementation,
     // if the sysproperty "expected.script" is set, we set the EXPECTED_SCRIPT
