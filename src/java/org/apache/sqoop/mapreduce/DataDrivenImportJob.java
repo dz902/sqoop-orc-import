@@ -48,6 +48,7 @@ import org.apache.sqoop.mapreduce.db.DBConfiguration;
 import org.apache.sqoop.mapreduce.db.DataDrivenDBInputFormat;
 import org.apache.sqoop.mapreduce.parquet.ParquetImportJobConfigurator;
 import org.apache.sqoop.orm.AvroSchemaGenerator;
+import org.apache.sqoop.orm.ORCSchemaGenerator;
 
 import static org.apache.sqoop.mapreduce.parquet.ParquetConstants.SQOOP_PARQUET_AVRO_SCHEMA_KEY;
 
@@ -119,9 +120,25 @@ public class DataDrivenImportJob extends ImportJobBase {
       options.getConf().set(SQOOP_PARQUET_AVRO_SCHEMA_KEY, schema.toString());
       parquetImportJobConfigurator.configureMapper(job, schema, options, tableName, destination);
     }
+    else if (options.getFileLayout()
+            == SqoopOptions.FileLayout.ORCDataFile) {
+      String orcSchema = generateORCSchema(tableName);
+      String outputWrapORCSchema = orcSchema.replaceAll("<", "");
+      LOG.info("generate orc schema : =" + outputWrapORCSchema);
+      ORCJob.setMapOutputSchema(job.getConfiguration(), orcSchema);
+      //AvroJob.setMapOutputSchema(job.getConfiguration(), schema);
+    }
 
-    job.setMapperClass(getMapperClass());
+      job.setMapperClass(getMapperClass());
   }
+
+    private String generateORCSchema(String tableName) throws IOException {
+      ConnManager connManager = getContext().getConnManager();
+      ORCSchemaGenerator generator = new ORCSchemaGenerator(options,
+              connManager, tableName);
+      return generator.generate();
+    }
+
 
   private Schema generateAvroSchema(String tableName,
       String schemaNameOverride) throws IOException {
@@ -163,6 +180,9 @@ public class DataDrivenImportJob extends ImportJobBase {
     } else if (options.getFileLayout()
         == SqoopOptions.FileLayout.ParquetFile) {
       return parquetImportJobConfigurator.getMapperClass();
+    }else if (options.getFileLayout()
+            == SqoopOptions.FileLayout.ORCDataFile) {
+      return org.apache.sqoop.mapreduce.OrcImportMapper.class;
     }
 
     return null;
@@ -186,6 +206,10 @@ public class DataDrivenImportJob extends ImportJobBase {
     } else if (options.getFileLayout()
         == SqoopOptions.FileLayout.ParquetFile) {
       return parquetImportJobConfigurator.getOutputFormatClass();
+    } else if (options.getFileLayout()
+            == SqoopOptions.FileLayout.ORCDataFile) {
+      return org.apache.hadoop.hive.ql.io.orc.OrcNewOutputFormat.class;
+//      return org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat.class;
     }
 
     return null;

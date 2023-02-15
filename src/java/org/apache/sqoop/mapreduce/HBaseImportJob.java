@@ -32,7 +32,7 @@ import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Table;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+//import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.security.token.TokenUtil;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -219,8 +219,8 @@ public class HBaseImportJob extends DataDrivenImportJob {
     hbaseConnection.close();
 
     // Make sure HBase libraries are shipped as part of the job.
-    TableMapReduceUtil.addDependencyJars(job);
-    TableMapReduceUtil.addDependencyJars(conf, Table.class);
+    //TableMapReduceUtil.addDependencyJars(job);
+    //TableMapReduceUtil.addDependencyJars(conf, Table.class);
 
     super.jobSetup(job);
   }

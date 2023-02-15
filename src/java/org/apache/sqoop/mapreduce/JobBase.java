@@ -113,6 +113,7 @@ public class JobBase {
    */
   protected Class<? extends OutputFormat> getOutputFormatClass()
       throws ClassNotFoundException {
+    LOG.info("outputformat class=="+this.outputFormatClass);
     return this.outputFormatClass;
   }
 

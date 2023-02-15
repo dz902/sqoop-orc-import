@@ -110,6 +110,7 @@ public abstract class BaseSqoopTool extends org.apache.sqoop.tool.SqoopTool {
   public static final String MAP_COLUMN_JAVA = "map-column-java";
   public static final String MAP_COLUMN_HIVE = "map-column-hive";
 
+  public static final String FMT_ORCDATAFILE_ARG = "as-orcdatafile";
   public static final String FMT_SEQUENCEFILE_ARG = "as-sequencefile";
   public static final String FMT_TEXTFILE_ARG = "as-textfile";
   public static final String FMT_AVRODATAFILE_ARG = "as-avrodatafile";
@@ -1802,6 +1803,14 @@ public abstract class BaseSqoopTool extends org.apache.sqoop.tool.SqoopTool {
       throw new InvalidOptionsException("HCatalog job is not compatible with "
         + " AVRO format option " + FMT_AVRODATAFILE_ARG
         + " option." + HELP_STR);
+
+    }
+
+
+    if (options.getFileLayout() == SqoopOptions.FileLayout.ORCDataFile) {
+      throw new InvalidOptionsException("HCatalog job is not compatible with "
+              + " ORC format option " + FMT_ORCDATAFILE_ARG
+              + " option." + HELP_STR);
 
     }
 

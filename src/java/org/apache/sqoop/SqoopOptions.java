@@ -88,7 +88,8 @@ public class SqoopOptions implements Cloneable {
     SequenceFile,
     AvroDataFile,
     ParquetFile,
-    BinaryFile
+    BinaryFile,
+    ORCDataFile
   }
 
   /**

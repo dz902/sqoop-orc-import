@@ -33,13 +33,12 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2;
+//import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2;
 import org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
+//import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
 import org.apache.sqoop.manager.ImportJobContext;
 import org.apache.sqoop.util.ImportException;
 import org.apache.sqoop.SqoopOptions;
@@ -80,28 +79,28 @@ public class HBaseBulkImportJob extends HBaseImportJob {
 
     // we shouldn't have gotten here if bulk load dir is not set
     // so let's throw a ImportException
-    if(getContext().getDestination() == null){
-      throw new ImportException("Can't run HBaseBulkImportJob without a " +
-          "valid destination directory.");
-    }
-
-    TableMapReduceUtil.addDependencyJars(job.getConfiguration(), Preconditions.class);
-    FileOutputFormat.setOutputPath(job, getContext().getDestination());
-    TableName hbaseTableName = TableName.valueOf(options.getHBaseTable());
-    hbaseConnection = ConnectionFactory.createConnection(job.getConfiguration());
-
-    try (
-        Table hbaseTable = hbaseConnection.getTable(hbaseTableName)
-    ) {
-      HFileOutputFormat2.configureIncrementalLoad(job, hbaseTable, hbaseConnection.getRegionLocator(hbaseTableName));
-    } catch (IOException | RuntimeException e) {
-      try {
-        hbaseConnection.close();
-      } catch (IOException ioException) {
-        LOG.error("Cannot close HBase connection.", ioException);
-      }
-      throw e;
-    }
+//    if(getContext().getDestination() == null){
+//      throw new ImportException("Can't run HBaseBulkImportJob without a " +
+//          "valid destination directory.");
+//    }
+//
+//    TableMapReduceUtil.addDependencyJars(job.getConfiguration(), Preconditions.class);
+//    FileOutputFormat.setOutputPath(job, getContext().getDestination());
+//    TableName hbaseTableName = TableName.valueOf(options.getHBaseTable());
+//    hbaseConnection = ConnectionFactory.createConnection(job.getConfiguration());
+//
+//    try (
+//        Table hbaseTable = hbaseConnection.getTable(hbaseTableName)
+//    ) {
+//      HFileOutputFormat2.configureIncrementalLoad(job, hbaseTable, hbaseConnection.getRegionLocator(hbaseTableName));
+//    } catch (IOException | RuntimeException e) {
+//      try {
+//        hbaseConnection.close();
+//      } catch (IOException ioException) {
+//        LOG.error("Cannot close HBase connection.", ioException);
+//      }
+//      throw e;
+//    }
   }
 
   /**

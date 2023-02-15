@@ -30,12 +30,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -318,7 +313,8 @@ public abstract class SqlManager
         info.add(Integer.valueOf(typeId));
         info.add(precision);
         info.add(scale);
-        colInfo.put(colName, info);
+        //colInfo.put(colName, info);
+        colInfo.put(colName.toLowerCase(Locale.ROOT), info);
         LOG.debug("Found column " + colName + " of type " + info);
       }
 
@@ -472,7 +468,8 @@ public abstract class SqlManager
             info.add(results.getInt("DATA_TYPE"));
             info.add(results.getInt("PRECISION"));
             info.add(results.getInt("SCALE"));
-            ret.put(results.getString("COLUMN_NAME"), info);
+            //ret.put(results.getString("COLUMN_NAME"), info);
+            ret.put(results.getString("COLUMN_NAME").toLowerCase(Locale.ROOT), info);
           }
         }
         LOG.debug("Columns returned = " + StringUtils.join(ret.keySet(), ","));

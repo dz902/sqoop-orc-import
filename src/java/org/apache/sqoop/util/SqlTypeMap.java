@@ -19,6 +19,7 @@
 package org.apache.sqoop.util;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,7 +39,8 @@ public class SqlTypeMap<K, V> extends HashMap<K, V> {
 
   @Override
   public V get(Object col) {
-    V sqlType = super.get(col);
+    String colNameWithOutUpper = String.valueOf(col).toLowerCase(Locale.ROOT);
+    V sqlType = super.get(colNameWithOutUpper);
     if (sqlType == null) {
       LOG.error("It seems like you are looking up a column that does not");
       LOG.error("exist in the table. Please ensure that you've specified");

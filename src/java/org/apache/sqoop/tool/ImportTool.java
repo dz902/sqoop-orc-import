@@ -751,6 +751,10 @@ public class ImportTool extends BaseSqoopTool {
       .withDescription("Imports data to Binary files")
       .withLongOpt(BaseSqoopTool.FMT_BINARYFILE_ARG)
       .create());
+    importOpts.addOption(OptionBuilder
+            .withDescription("Imports data to orc data files")
+            .withLongOpt(FMT_ORCDATAFILE_ARG)
+            .create());
     importOpts.addOption(OptionBuilder.withArgName("n")
         .hasArg().withDescription("Use 'n' map tasks to import in parallel")
         .withLongOpt(NUM_MAPPERS_ARG)
@@ -977,6 +981,10 @@ public class ImportTool extends BaseSqoopTool {
         out.setFileLayout(SqoopOptions.FileLayout.ParquetFile);
       }
 
+      if (in.hasOption(FMT_ORCDATAFILE_ARG)) {
+        out.setFileLayout(SqoopOptions.FileLayout.ORCDataFile);
+      }
+
       if (in.hasOption(NUM_MAPPERS_ARG)) {
         out.setNumMappers(Integer.parseInt(in.getOptionValue(NUM_MAPPERS_ARG)));
       }
@@ -1164,10 +1172,17 @@ public class ImportTool extends BaseSqoopTool {
     }
 
     if (options.getIncrementalMode() == SqoopOptions.IncrementalMode.DateLastModified
-        && options.getFileLayout() == SqoopOptions.FileLayout.AvroDataFile) {
+            && options.getFileLayout() == SqoopOptions.FileLayout.ORCDataFile) {
       throw new InvalidOptionsException("--"
-          + INCREMENT_TYPE_ARG + " lastmodified cannot be used in conjunction with --"
-          + FMT_AVRODATAFILE_ARG + "." + HELP_STR);
+              + INCREMENT_TYPE_ARG + " lastmodified cannot be used in conjunction with --"
+              + FMT_ORCDATAFILE_ARG + "." + HELP_STR);
+    }
+
+    if (options.getIncrementalMode() == SqoopOptions.IncrementalMode.DateLastModified
+            && options.getFileLayout() == SqoopOptions.FileLayout.AvroDataFile) {
+      throw new InvalidOptionsException("--"
+              + INCREMENT_TYPE_ARG + " lastmodified cannot be used in conjunction with --"
+              + FMT_AVRODATAFILE_ARG + "." + HELP_STR);
     }
 
     if (isIncrementalModeAppendOrLastmodified(options)
@@ -1177,6 +1192,8 @@ public class ImportTool extends BaseSqoopTool {
               + TEMP_ROOTDIR_ARG  + " option must be always set to a location in S3.");
     }
   }
+
+
 
   private boolean isIncrementalModeAppendOrLastmodified(SqoopOptions options) {
     return options.getIncrementalMode() == SqoopOptions.IncrementalMode.AppendRows
